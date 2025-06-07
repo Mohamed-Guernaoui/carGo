@@ -28,12 +28,12 @@ return new class extends Migration {
             $table->string("image_principale_url")->nullable(); // URL ou chemin vers l'image
             $table->text("description")->nullable();
             $table
-                ->foreignId("utilisateur_id")
+                ->foreignId("user_id")
                 ->nullable()
                 ->comment(
-                    'Référence à l\'utilisateur propriétaire ou gestionnaire du véhicule'
+                    'Référence à l\'user propriétaire ou gestionnaire du véhicule'
                 )
-                ->constrained("utilisateurs")
+                ->constrained("users")
                 ->onDelete("set null");
 
             // Clés étrangères optionnelles (nécessitent les migrations des tables correspondantes)

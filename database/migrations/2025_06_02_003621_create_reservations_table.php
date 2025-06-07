@@ -13,9 +13,9 @@ return new class extends Migration {
         Schema::create("reservations", function (Blueprint $table) {
             $table->id();
             $table
-                ->foreignId("utilisateur_id")
-                ->constrained("utilisateurs")
-                ->onDelete("cascade"); // Si l'utilisateur est supprimé, ses réservations aussi
+                ->foreignId("user_id")
+                ->constrained("users")
+                ->onDelete("cascade"); // Si l'user est supprimé, ses réservations aussi
             $table
                 ->foreignId("vehicule_id")
                 ->constrained("vehicules")
