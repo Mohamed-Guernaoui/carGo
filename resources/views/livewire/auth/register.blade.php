@@ -11,6 +11,7 @@ use Livewire\Volt\Component;
 new #[Layout("components.layouts.auth")] class extends Component {
     public string $name = "";
     public string $email = "";
+    public string $cin = "";
     public string $password = "";
     public string $password_confirmation = "";
 
@@ -21,6 +22,7 @@ new #[Layout("components.layouts.auth")] class extends Component {
     {
         $validated = $this->validate([
             "name" => ["required", "string", "max:255"],
+            "cin" => ["required", "string", "unique:" . User::class],
             "email" => [
                 "required",
                 "string",
@@ -58,16 +60,62 @@ new #[Layout("components.layouts.auth")] class extends Component {
     <x-auth-session-status class="text-center" :status="session('status')" />
 
     <form wire:submit="register" class="flex flex-col gap-6">
-        <!-- Name -->
-        <flux:input
-            wire:model="name"
-            :label="__('Name')"
-            type="text"
-            required
-            autofocus
-            autocomplete="name"
-            :placeholder="__('Full name')"
-        />
+        <h1 class="text-2xl font-bold text-center">Welcome to our platform!</h1>
+
+        <div class="flex flex-col gap-3 p-4 rounded-lg border border-zinc-700 bg-zinc-800/30 dark:bg-zinc-800">
+            <ul class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1">
+              <li>
+                  <flux:radio
+                      wire:model.live="role"
+                      value="owner"
+                      
+                      :label="__('Owner')"
+
+                  />
+              </li>
+              <li>
+                <a href="#page2" class="flex justify-center bg-white rounded-lg shadow text-indigo-900 py-4">Titan maintenance</a>
+              </li>  </ul>
+            <label for="role" class="text-sm font-medium text-zinc-700 dark:text-zinc-300">{{ __('Select your role') }}</label>
+            <div class="space-y-2">
+
+                <flux:radio
+                    wire:model.live="role"
+                    value="client"
+                    :label="__('Client')"
+                    description="Access to booking and client features"
+                    name="role"
+                />
+            </div>
+        </div>
+
+        <div class="flex flex-row gap-6">
+            <!-- Name -->
+            <flux:input
+
+                wire:model="name"
+                :label="__('Name')"
+                type="text"
+                required
+                autofocus
+                autocomplete="name"
+                :placeholder="__('Full name')"
+            />
+            <!-- CIN -->
+
+            <flux:input
+                wire:model="cin"
+                :label="__('CIN')"
+                type="text"
+                required
+                autocomplete="cin"
+                :placeholder="__('CIN')"
+            />
+
+
+
+        </div>
+
 
         <!-- Email Address -->
         <flux:input
