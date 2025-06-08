@@ -28,17 +28,13 @@ return new class extends Migration {
             $table->string("image_principale_url")->nullable(); // URL ou chemin vers l'image
             $table->text("description")->nullable();
             $table
-                ->foreignId("user_id")
+                ->foreignId("owner_id")
                 ->nullable()
                 ->comment(
                     'Référence à l\'user propriétaire ou gestionnaire du véhicule'
                 )
                 ->constrained("users")
                 ->onDelete("set null");
-
-            // Clés étrangères optionnelles (nécessitent les migrations des tables correspondantes)
-            // $table->foreignId('categorie_vehicule_id')->nullable()->constrained('categorie_vehicules')->onDelete('set null');
-            // $table->foreignId('depot_id')->nullable()->constrained('depots')->onDelete('set null'); // Si chaque véhicule est rattaché à un dépôt principal
 
             $table->timestamps();
         });

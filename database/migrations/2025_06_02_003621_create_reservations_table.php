@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create("reservations", function (Blueprint $table) {
             $table->id();
             $table
-                ->foreignId("user_id")
+                ->foreignId("client_id")
                 ->constrained("users")
                 ->onDelete("cascade"); // Si l'user est supprimé, ses réservations aussi
             $table
@@ -24,8 +24,16 @@ return new class extends Migration {
             $table->dateTime("date_debut_location");
             $table->dateTime("date_fin_location");
             $table->decimal("prix_total", 10, 2);
-            $table->string("statut")->default("en_attente"); // Ex: 'en_attente', 'confirmee', 'annulee', 'active', 'terminee'
             $table->text("notes_speciales")->nullable();
+            $table
+                ->enum("status", [
+                    "en_attente",
+                    "confirme",
+                    "actif",
+                    "termine",
+                    "annule",
+                ])
+                ->default("en_attente");
 
             $table->timestamps();
         });

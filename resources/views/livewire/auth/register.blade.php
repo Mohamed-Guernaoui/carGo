@@ -68,7 +68,7 @@ new #[Layout("components.layouts.auth")] class extends Component {
                   <flux:radio
                       wire:model.live="role"
                       value="owner"
-                      
+
                       :label="__('Owner')"
 
                   />
