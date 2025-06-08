@@ -41,6 +41,10 @@ return [
             "driver" => "session",
             "provider" => "users",
         ],
+        "owner" => [
+            "driver" => "session",
+            "provider" => "owners",
+        ],
     ],
 
     /*
@@ -67,6 +71,12 @@ return [
                 "AUTH_MODEL",
                 App\Modules\GestionUtilisateurs\Models\User::class
             ),
+            "scope" => "clients", // Default scope for client auth
+        ],
+        "owners" => [
+            "driver" => "eloquent",
+            "model" => App\Modules\GestionUtilisateurs\Models\User::class,
+            "scope" => "owners", // Scope for owner auth
         ],
 
         // 'users' => [
