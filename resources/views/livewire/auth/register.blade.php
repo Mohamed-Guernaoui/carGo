@@ -14,6 +14,9 @@ new #[Layout("components.layouts.auth")] class extends Component {
     public string $cin = "";
     public string $password = "";
     public string $password_confirmation = "";
+    public string $role = "client"; // Default role
+    public string $company_name = ""; // For owners only
+    public string $telephone = ""; // Common but might be required for owners
 
     /**
      * Handle an incoming registration request.
@@ -37,6 +40,14 @@ new #[Layout("components.layouts.auth")] class extends Component {
                 "confirmed",
                 Rules\Password::defaults(),
             ],
+            "role" => ["required", "string", "in:client,owner"],
+            "company_name" => [
+                "required_if:role,owner",
+                "nullable",
+                "string",
+                "max:255",
+            ],
+            "telephone" => ["required", "string", "max:20"],
         ]);
 
         $validated["password"] = Hash::make($validated["password"]);
@@ -46,7 +57,10 @@ new #[Layout("components.layouts.auth")] class extends Component {
         Auth::login($user);
 
         $this->redirectIntended(
-            route("dashboard", absolute: false),
+            route(
+                $this->role === "owner" ? "owner.dashboard" : "dashboard",
+                absolute: false
+            ),
             navigate: true
         );
     }
@@ -54,68 +68,85 @@ new #[Layout("components.layouts.auth")] class extends Component {
 ?>
 
 <div class="flex flex-col gap-6">
-    <x-auth-header :title="__('Create an account')" :description="__('Enter your details below to create your account')" />
+    <x-auth-header
+        :title="__('Create an account')"
+        :description="__('Enter your details below to create your account')"
+    />
 
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />
 
     <form wire:submit="register" class="flex flex-col gap-6">
-        <h1 class="text-2xl font-bold text-center">Welcome to our platform!</h1>
+        <!-- Role Selection Tabs -->
+        <div class="flex flex-col gap-3">
+            <label class="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                {{ __('I am registering as a:') }}
+            </label>
 
-        <div class="flex flex-col gap-3 p-4 rounded-lg border border-zinc-700 bg-zinc-800/30 dark:bg-zinc-800">
-            <ul class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1">
-              <li>
-                  <flux:radio
-                      wire:model.live="role"
-                      value="owner"
+            <div class="grid grid-cols-2 gap-2">
+                <!-- Client Tab -->
+                <button
+                    type="button"
+                    wire:click="$set('role', 'client')"
+                    @class([
+                        'py-3 px-4 rounded-lg border transition-all duration-200 text-center',
+                        'bg-blue-600 border-blue-600 text-white shadow-md' => $role === 'client',
+                        'bg-white dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700' => $role !== 'client'
+                    ])
+                >
+                    <div class="flex flex-col items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        <span class="font-medium">{{ __('Client') }}</span>
+                        <span class="text-xs opacity-80">{{ __('Rent vehicles') }}</span>
+                    </div>
+                </button>
 
-                      :label="__('Owner')"
-
-                  />
-              </li>
-              <li>
-                <a href="#page2" class="flex justify-center bg-white rounded-lg shadow text-indigo-900 py-4">Titan maintenance</a>
-              </li>  </ul>
-            <label for="role" class="text-sm font-medium text-zinc-700 dark:text-zinc-300">{{ __('Select your role') }}</label>
-            <div class="space-y-2">
-
-                <flux:radio
-                    wire:model.live="role"
-                    value="client"
-                    :label="__('Client')"
-                    description="Access to booking and client features"
-                    name="role"
-                />
+                <!-- Owner Tab -->
+                <button
+                    type="button"
+                    wire:click="$set('role', 'owner')"
+                    @class([
+                        'py-3 px-4 rounded-lg border transition-all duration-200 text-center',
+                        'bg-blue-600 border-blue-600 text-white shadow-md' => $role === 'owner',
+                        'bg-white dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700' => $role !== 'owner'
+                    ])
+                >
+                    <div class="flex flex-col items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                        <span class="font-medium">{{ __('Vehicle Owner') }}</span>
+                        <span class="text-xs opacity-80">{{ __('List your vehicles') }}</span>
+                    </div>
+                </button>
             </div>
         </div>
 
-        <div class="flex flex-row gap-6">
+        <!-- Common Fields -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Name -->
             <flux:input
-
                 wire:model="name"
-                :label="__('Name')"
+                :label="__('Full Name')"
                 type="text"
                 required
                 autofocus
                 autocomplete="name"
-                :placeholder="__('Full name')"
+                :placeholder="__('John Doe')"
             />
-            <!-- CIN -->
 
+            <!-- CIN -->
             <flux:input
                 wire:model="cin"
                 :label="__('CIN')"
                 type="text"
                 required
                 autocomplete="cin"
-                :placeholder="__('CIN')"
+                :placeholder="__('Your CIN number')"
             />
-
-
-
         </div>
-
 
         <!-- Email Address -->
         <flux:input
@@ -127,31 +158,56 @@ new #[Layout("components.layouts.auth")] class extends Component {
             placeholder="email@example.com"
         />
 
-        <!-- Password -->
+        <!-- Phone Number -->
         <flux:input
-            wire:model="password"
-            :label="__('Password')"
-            type="password"
+            wire:model="telephone"
+            :label="__('Phone Number')"
+            type="tel"
             required
-            autocomplete="new-password"
-            :placeholder="__('Password')"
-            viewable
+            autocomplete="tel"
+            placeholder="+212 600 000 000"
         />
 
-        <!-- Confirm Password -->
-        <flux:input
-            wire:model="password_confirmation"
-            :label="__('Confirm password')"
-            type="password"
-            required
-            autocomplete="new-password"
-            :placeholder="__('Confirm password')"
-            viewable
-        />
+        <!-- Owner-specific Fields -->
+        <div x-show="$wire.role === 'owner'">
+            <flux:input
+                wire:model="company_name"
+                :label="__('Company Name')"
+                type="text"
+                :required="$role === 'owner'"
+                :placeholder="__('Your company name (if applicable)')"
+            />
+        </div>
+
+        <!-- Password Fields -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Password -->
+            <flux:input
+                wire:model="password"
+                :label="__('Password')"
+                type="password"
+                required
+                autocomplete="new-password"
+                :placeholder="__('Minimum 8 characters')"
+                viewable
+            />
+
+            <!-- Confirm Password -->
+            <flux:input
+                wire:model="password_confirmation"
+                :label="__('Confirm Password')"
+                type="password"
+                required
+                autocomplete="new-password"
+                :placeholder="__('Confirm your password')"
+                viewable
+            />
+        </div>
 
         <div class="flex items-center justify-end">
             <flux:button type="submit" variant="primary" class="w-full">
-                {{ __('Create account') }}
+                {{ __('Create account as ') }}
+                <span x-text="$wire.role === 'client' ? 'Client' : 'Vehicle Owner'"></span>
             </flux:button>
         </div>
     </form>
