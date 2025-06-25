@@ -49,7 +49,7 @@ new #[Layout("components.layouts.auth")] class extends Component {
 
         // Determine redirect path based on role
         $redirectTo = match ($user->role) {
-            "owner" => route("ex.test", absolute: false),
+            "owner" => route("admin.dashboard", absolute: false),
             "client" => route("dashboard", absolute: false),
             default => route("home", absolute: false), // fallback
         };
