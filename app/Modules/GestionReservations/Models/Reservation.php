@@ -16,6 +16,14 @@ class Reservation extends Model
         "date_fin",
         "prix_total",
         "statut",
+        "notes_speciales",
+        "date_debut_location",
+        "date_fin_location",
+    ];
+
+    protected $casts = [
+        "date_debut_location" => "datetime",
+        "date_fin_location" => "datetime",
     ];
 
     public function vehicule()
@@ -23,7 +31,7 @@ class Reservation extends Model
         return $this->belongsTo(Vehicule::class, "vehicule_id");
     }
 
-    public function utilisateur()
+    public function client()
     {
         return $this->belongsTo(Utilisateur::class, "utilisateur_id");
     }

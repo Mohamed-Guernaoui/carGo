@@ -1,10 +1,13 @@
 <?php
 
+use App\Livewire\ReserveVehicule;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 use App\Livewire\Test;
 use App\Livewire\CreateVehicule;
 use App\Livewire\VehiculeList;
+use App\Livewire\ShowVehicule;
+
 use App\Livewire\AdminDashboard;
 
 // use App\Modules\GestionVehicules\Models\Vehicule;
@@ -15,6 +18,14 @@ Route::get("/", function () {
 
 // Vehicule listings
 Route::get("/list-vehicules", VehiculeList::class)->name("vehicules.index");
+Route::get("/vehicules/{vehicule}", ShowVehicule::class)->name(
+    "vehicules.show"
+);
+
+//reservation
+Route::get("/vehicules/{vehicule}/reserve", ReserveVehicule::class)->name(
+    "vehicules.reserve"
+);
 
 // Owner Routes
 Route::view("dashboard", "dashboard")
