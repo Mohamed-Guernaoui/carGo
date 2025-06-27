@@ -11,12 +11,12 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Volt\Component;
 
-new #[Layout('components.layouts.auth')] class extends Component {
-    #[Validate('required|string|email')]
-    public string $email = '';
+new #[Layout("components.layouts.auth")] class extends Component {
+    #[Validate("required|string|email")]
+    public string $email = "";
 
-    #[Validate('required|string')]
-    public string $password = '';
+    #[Validate("required|string")]
+    public string $password = "";
 
     public bool $remember = false;
 
@@ -29,18 +29,32 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
+        if (
+            !Auth::attempt(
+                ["email" => $this->email, "password" => $this->password],
+                $this->remember
+            )
+        ) {
             RateLimiter::hit($this->throttleKey());
-
             throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
+                "email" => __("auth.failed"),
             ]);
         }
 
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        // Get the authenticated user
+        $user = Auth::user();
+
+        // Determine redirect path based on role
+        $redirectTo = match ($user->role) {
+            "owner" => route("admin.dashboard", absolute: false),
+            "client" => route("dashboard", absolute: false),
+            default => route("home", absolute: false), // fallback
+        };
+
+        $this->redirectIntended(default: $redirectTo, navigate: true);
     }
 
     /**
@@ -48,7 +62,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
      */
     protected function ensureIsNotRateLimited(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 
@@ -57,9 +71,9 @@ new #[Layout('components.layouts.auth')] class extends Component {
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => __('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
+            "email" => __("auth.throttle", [
+                "seconds" => $seconds,
+                "minutes" => ceil($seconds / 60),
             ]),
         ]);
     }
@@ -69,9 +83,12 @@ new #[Layout('components.layouts.auth')] class extends Component {
      */
     protected function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
+        return Str::transliterate(
+            Str::lower($this->email) . "|" . request()->ip()
+        );
     }
-}; ?>
+};
+?>
 
 <div class="flex flex-col gap-6">
     <x-auth-header :title="__('Log in to your account')" :description="__('Enter your email and password below to log in')" />

@@ -40,7 +40,7 @@ new #[Layout("components.layouts.auth")] class extends Component {
                 "confirmed",
                 Rules\Password::defaults(),
             ],
-            "role" => ["required", "string", "in:client,owner"],
+            "role" => ["required", "string"],
             "company_name" => [
                 "required_if:role,owner",
                 "nullable",
@@ -51,14 +51,23 @@ new #[Layout("components.layouts.auth")] class extends Component {
         ]);
 
         $validated["password"] = Hash::make($validated["password"]);
-
-        event(new Registered(($user = User::create($validated))));
+        $validated["role"] = $this->role;
+        $user = User::create([
+            "name" => $this->name,
+            "cin" => $this->cin,
+            "email" => $this->email,
+            "password" => bcrypt($this->password),
+            "role" => $this->role,
+            "company_name" => $this->company_name,
+            "telephone" => $this->telephone,
+        ]);
+        event(new Registered($user));
 
         Auth::login($user);
 
         $this->redirectIntended(
             route(
-                $this->role === "owner" ? "owner.dashboard" : "dashboard",
+                $this->role === "owner" ? "admin.dashboard" : "dashboard",
                 absolute: false
             ),
             navigate: true
@@ -88,9 +97,10 @@ new #[Layout("components.layouts.auth")] class extends Component {
                 <button
                     type="button"
                     wire:click="$set('role', 'client')"
+
                     @class([
-                        'py-3 px-4 rounded-lg border transition-all duration-200 text-center',
-                        'bg-blue-600 border-blue-600 text-white shadow-md' => $role === 'client',
+                    'py-3 px-4 rounded-lg border transition-all duration-10 ease-in-out text-center cursor-pointer',
+                        'bg-blue-600  text-white shadow-md' => $role === 'client',
                         'bg-white dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700' => $role !== 'client'
                     ])
                 >
@@ -108,8 +118,8 @@ new #[Layout("components.layouts.auth")] class extends Component {
                     type="button"
                     wire:click="$set('role', 'owner')"
                     @class([
-                        'py-3 px-4 rounded-lg border transition-all duration-200 text-center',
-                        'bg-blue-600 border-blue-600 text-white shadow-md' => $role === 'owner',
+                        'py-3 px-4 rounded-lg border transition-all duration-10 ease-in-out text-center cursor-pointer',
+                        'bg-blue-600  text-white shadow-md' => $role === 'owner',
                         'bg-white dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700' => $role !== 'owner'
                     ])
                 >

@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->string("cin")->unique();
             $table->string("password");
             $table->string("company_name")->nullable();
-            $table->enum("role", ["owner", "client"]);
+            $table->enum("role", ["client", "owner"]);
             $table->rememberToken();
             $table->string("telephone")->nullable();
             $table->text("adresse")->nullable();

@@ -4,9 +4,12 @@ namespace App\Modules\GestionUtilisateurs\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use App\Modules\GestionReservations\Models\Reservation; // Important: namespace correct
+use App\Modules\GestionVehicules\Models\Vehicule;
 
 class User extends Authenticatable
 {
@@ -26,6 +29,7 @@ class User extends Authenticatable
         "company_name",
         "telephone",
         "address",
+        "role",
     ];
 
     /**
@@ -93,5 +97,18 @@ class User extends Authenticatable
             ->explode(" ")
             ->map(fn(string $name) => Str::of($name)->substr(0, 1))
             ->implode("");
+    }
+
+    public function vehiculesOwned(): HasMany
+    {
+        return $this->hasMany(Vehicule::class, "owner_id");
+    }
+
+    /**
+     * Relation vers les réservations effectuées par l'utilisateur.
+     */
+    public function reservations(): HasMany
+    {
+        return $this->hasMany(Reservation::class, "client_id");
     }
 }

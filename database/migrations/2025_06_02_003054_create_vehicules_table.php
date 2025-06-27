@@ -25,7 +25,7 @@ return new class extends Migration {
             $table->string("type_carburant")->nullable(); // Ex: 'essence', 'diesel', 'electrique'
             $table->decimal("tarif_journalier", 8, 2);
             $table->boolean("disponible")->default(true);
-            $table->string("image_principale_url")->nullable(); // URL ou chemin vers l'image
+            $table->string("images")->nullable(); // URL ou chemin vers l'image
             $table->text("description")->nullable();
             $table
                 ->foreignId("owner_id")
