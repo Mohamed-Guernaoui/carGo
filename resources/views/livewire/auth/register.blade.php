@@ -99,8 +99,8 @@ new #[Layout("components.layouts.auth")] class extends Component {
                     wire:click="$set('role', 'client')"
 
                     @class([
-                        'py-3 px-4 rounded-lg border transition-all duration-100 text-center',
-                        'bg-blue-600 border-blue-600 text-white shadow-md' => $role === 'client',
+                    'py-3 px-4 rounded-lg border transition-all duration-10 ease-in-out text-center cursor-pointer',
+                        'bg-blue-600  text-white shadow-md' => $role === 'client',
                         'bg-white dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700' => $role !== 'client'
                     ])
                 >
@@ -118,8 +118,8 @@ new #[Layout("components.layouts.auth")] class extends Component {
                     type="button"
                     wire:click="$set('role', 'owner')"
                     @class([
-                        'py-3 px-4 rounded-lg border transition-all duration-100 text-center',
-                        'bg-blue-600 border-blue-600 text-white shadow-md' => $role === 'owner',
+                        'py-3 px-4 rounded-lg border transition-all duration-10 ease-in-out text-center cursor-pointer',
+                        'bg-blue-600  text-white shadow-md' => $role === 'owner',
                         'bg-white dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700' => $role !== 'owner'
                     ])
                 >
