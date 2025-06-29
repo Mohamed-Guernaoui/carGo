@@ -387,7 +387,7 @@ class ReserveVehicule extends Component
             // --- Determine or Create Client User ---
             $clientUser = auth()->user(); // Attempt to get authenticated user
 
-            if (!$clientUser) {
+            if (!$clientUser || $clientUser->role !== "client") {
                 // If not authenticated, try to find user by email or create a new one
                 $clientUser = User::firstOrCreate(
                     ["email" => $this->driverInfo["email"]],
@@ -412,36 +412,37 @@ class ReserveVehicule extends Component
                 // If a new user was created, you might want to send them an email
                 // to set a password for future logins.
             }
+
             // --- End Determine or Create Client User ---
 
             $this->finalTotalPrice = $this->totalPrice;
 
-            dump([
-                "client_id" => $clientUser->id,
-                "vehicule_id" => $this->selectedVehicule->id,
-                "date_debut_location_string" => $this->pickupDateTime, // The raw string from Livewire
-                "date_debut_location_parsed" => Carbon::parse(
-                    $this->pickupDateTime
-                ), // How Carbon interprets it
-                "date_fin_location_string" => $this->returnDateTime,
-                "date_fin_location_parsed" => Carbon::parse(
-                    $this->returnDateTime
-                ),
-                "prix_total" => $this->finalTotalPrice,
-                "notes_speciales_data" => [
-                    "insurance" => $this->selectedInsurance,
-                    "addons" => $this->selectedAddons,
-                    "primary_driver" => $this->driverInfo,
-                    "additional_driver" => in_array(
-                        "additional_driver",
-                        $this->selectedAddons
-                    )
-                        ? $this->additionalDriverInfo
-                        : null,
-                    "payment_method" => $this->paymentMethod,
-                ],
-                "status" => "confirme",
-            ]);
+            // dump([
+            //     "client_id" => $clientUser->id,
+            //     "vehicule_id" => $this->selectedVehicule->id,
+            //     "date_debut_location_string" => $this->pickupDateTime, // The raw string from Livewire
+            //     "date_debut_location_parsed" => Carbon::parse(
+            //         $this->pickupDateTime
+            //     ), // How Carbon interprets it
+            //     "date_fin_location_string" => $this->returnDateTime,
+            //     "date_fin_location_parsed" => Carbon::parse(
+            //         $this->returnDateTime
+            //     ),
+            //     "prix_total" => $this->finalTotalPrice,
+            //     "notes_speciales_data" => [
+            //         "insurance" => $this->selectedInsurance,
+            //         "addons" => $this->selectedAddons,
+            //         "primary_driver" => $this->driverInfo,
+            //         "additional_driver" => in_array(
+            //             "additional_driver",
+            //             $this->selectedAddons
+            //         )
+            //             ? $this->additionalDriverInfo
+            //             : null,
+            //         "payment_method" => $this->paymentMethod,
+            //     ],
+            //     "status" => "confirme",
+            // ]);
             $reservation = Reservation::create([
                 "client_id" => $clientUser->id, // Use the ID of the determined/created user
                 "vehicule_id" => $this->selectedVehicule->id,
@@ -494,14 +495,8 @@ class ReserveVehicule extends Component
 
     public function manageBooking()
     {
-        session()->flash(
-            "info",
-            "Redirecting to manage booking for " .
-                $this->confirmationNumber .
-                "..."
-        );
         // Redirect to a user's booking management page
-        // return redirect()->route('user.bookings');
+        return redirect()->route("client.dashboard");
     }
 
     public function changeVehicule()
