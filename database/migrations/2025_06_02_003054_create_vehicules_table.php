@@ -23,6 +23,7 @@ return new class extends Migration {
                 ->default(5);
             $table->string("transmission")->nullable(); // Ex: 'manuelle', 'automatique'
             $table->string("type_carburant")->nullable(); // Ex: 'essence', 'diesel', 'electrique'
+            $table->json("caracteristiques")->nullable();
             $table->decimal("tarif_journalier", 8, 2);
             $table->boolean("disponible")->default(true);
             $table->string("images")->nullable(); // URL ou chemin vers l'image

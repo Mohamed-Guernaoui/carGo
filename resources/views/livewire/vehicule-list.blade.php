@@ -1,47 +1,54 @@
 <div class="min-h-screen bg-gray-50">
-    <div class="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-40">
+    <div class="bg-white shadow-md border-b border-gray-100 sticky top-0 z-40 backdrop-filter backdrop-blur-lg bg-opacity-90 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center">
-                    <a href="/" class="text-2xl font-bold text-gray-900">CarGo</a>
+                    <a href="/" class="text-2xl font-bold text-blue-600 hover:text-blue-800 transition-colors duration-200">CarGo</a>
                 </div>
 
                 <div class="flex-1 max-w-lg mx-8">
-                    <div class="relative">
+                    <div class="relative group">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </div>
                         <input wire:model.live.debounce.300ms="quickSearch" type="text"
                                placeholder="Search by make, model, or location..."
-                               class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                               class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow">
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                            <button type="button" class="text-gray-400 hover:text-blue-500 focus:outline-none">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 <div class="flex items-center space-x-4">
-                    <button class="relative p-2 text-gray-400 hover:text-gray-500">
+                    <button class="relative p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all duration-200">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                         </svg>
                         @if($favoritesCount > 0)
-
-                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center transform transition-transform duration-200 hover:scale-110">
                             {{ $favoritesCount }}
                         </span>
-
                         @endif
                     </button>
-                    <button class="relative p-2 text-gray-400 hover:text-gray-500">
+                    <button class="relative p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all duration-200">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                         </svg>
                         @if($compareCount > 0)
-                        <span class="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        <span class="absolute -top-1 -right-1 bg-blue-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center transform transition-transform duration-200 hover:scale-110">
                             {{ $compareCount }}
                         </span>
                         @endif
                     </button>
+                    <div class="h-8 w-px bg-gray-200 mx-1"></div>
+
                 </div>
             </div>
         </div>
@@ -64,7 +71,7 @@
                             @foreach($this->activeFilters as $filter)
                             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                 {{ $filter }}
-                                <button wire:click="removeFilter('{{ $filter }}')" class="ml-1 text-blue-600 hover:text-blue-800">
+                                <button wire:click="removeFilter('{{ $filter }}')" class="ml-1 cursor-pointer text-blue-600 hover:text-blue-800">
                                     <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                                     </svg>
@@ -85,12 +92,13 @@
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             </div>
                             <div class="flex items-center justify-between text-xs text-gray-500">
-                                <span>$25</span>
-                                <span>$500+</span>
+                                <span>25 MAD</span>
+                                <span>500 MAD+</span>
                             </div>
                         </div>
                     </div>
 
+                    {{--
                     <div class="mb-6">
                         <h4 class="text-sm font-medium text-gray-900 mb-3">vehicule Type</h4>
                         <div class="space-y-2">
@@ -103,7 +111,8 @@
                             </label>
                             @endforeach
                         </div>
-                    </div>
+                    </div>--}}
+
 
                     <div class="mb-6">
                         <h4 class="text-sm font-medium text-gray-900 mb-3">Transmission</h4>
@@ -144,9 +153,9 @@
                         <div class="space-y-2">
                             @foreach(['gps', 'bluetooth', 'backup_camera', 'heated_seats', 'sunroof', 'leather_seats'] as $feature)
                             <label class="flex items-center">
-                                <input wire:model.live="selectedFeatures" type="checkbox" value="feature "
+                                <input wire:model.live="selectedFeatures" type="checkbox" value="{{ $feature }}"
                                        class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                                <span class="ml-2 text-sm text-gray-700">wifi</span>
+                                <span class="ml-2 text-sm text-gray-700">{{ ucfirst($feature) }}</span>
                             </label>
                             @endforeach
                         </div>
@@ -238,19 +247,21 @@
 
 
                                 <div class="absolute bottom-3 left-3">
-                                    <span class="bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-medium px-2 py-1 rounded-full">
+                                    <span class="backdrop-blur-sm bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full">
                                         {{-- $vehicule->type isn't in your DB schema, defaulting to marque/modele --}}
                                         {{ ucfirst($vehicule->modele) }} {{-- Or add a 'type' column to Vehicules --}}
                                     </span>
                                 </div>
+                                {{--
 
                                 @if($vehicule->discount_percentage > 0)
                                 <div class="absolute top-3 left-1/2 transform -translate-x-1/2">
-                                    <span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                                    <span class="bg-red-300 text-white text-xs font-bold px-2 py-1 rounded-full">
                                         {{ $vehicule->discount_percentage }}% OFF
                                     </span>
                                 </div>
                                 @endif
+                                --}}
                             </div>
 
                             <div class="p-5">
@@ -263,9 +274,9 @@
                                     </div>
                                     <div class="text-right">
                                         @if($vehicule->original_price > $vehicule->tarif_journalier)
-                                        <p class="text-sm text-gray-400 line-through">${{ number_format($vehicule->original_price, 2) }}</p>
+                                        <p class="text-sm text-gray-400 line-through">MAD {{ number_format($vehicule->original_price, 2) }}</p>
                                         @endif
-                                        <p class="text-lg font-bold text-blue-600">${{ number_format($vehicule->tarif_journalier, 2) }}<span class="text-sm font-normal text-gray-600">/day</span></p>
+                                        <p class="text-lg font-bold text-blue-600">MAD {{ number_format($vehicule->tarif_journalier, 2) }}<span class="text-sm font-normal text-gray-600">/day</span></p>
                                     </div>
                                 </div>
 

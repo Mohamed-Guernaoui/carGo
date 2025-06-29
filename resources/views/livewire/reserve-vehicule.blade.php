@@ -150,7 +150,7 @@
                                         <span class="ml-2 text-sm text-gray-600">{{ number_format($selectedVehicule->average_rating, 1) }} ({{ $selectedVehicule->reviews_count }})</span>
                                     </div>
                                     <div class="text-right">
-                                        <p class="text-2xl font-bold text-blue-600">${{ number_format($selectedVehicule->tarif_journalier, 2) }}<span class="text-sm font-normal text-gray-600">/day</span></p>
+                                        <p class="text-2xl font-bold text-blue-600">MAD {{ number_format($selectedVehicule->tarif_journalier, 2) }}<span class="text-sm font-normal text-gray-600">/day</span></p>
                                     </div>
                                 </div>
                             </div>
@@ -716,7 +716,7 @@
                     <div class="space-y-2 text-sm">
                         <div class="flex justify-between">
                             <span class="text-gray-600">Daily rate:</span>
-                            <span class="text-gray-900">${{ number_format($selectedVehicule->tarif_journalier, 2) }}</span>
+                            <span class="text-gray-900">MAD {{ number_format($selectedVehicule->tarif_journalier, 2) }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600">{{ $this->totalDays }} day{{ $this->totalDays !== 1 ? 's' : '' }}:</span>

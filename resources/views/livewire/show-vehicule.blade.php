@@ -1,7 +1,187 @@
 <div>
+    <nav class="bg-white shadow-md border-b border-gray-100 sticky top-0 z-100 backdrop-filter backdrop-blur-lg bg-opacity-95 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-8">
+                    <div class="flex-shrink-0">
+                        <a href="/" class="flex items-center">
+                            <svg class="h-8 w-8 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                            </svg>
+                            <h1 class="text-2xl font-bold text-gray-900 ml-2 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">CarGo</h1>
+                        </a>
+                    </div>
+                    <div class="hidden md:flex space-x-6">
+                        <a href="{{ route('vehicules.index') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 relative group">
+                            Vehicules
+                            <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+                        </a>
+                        <a href="/locations" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 relative group">
+                            Locations
+                            <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+                        </a>
+                        <a href="/about" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 relative group">
+                            About Us
+                            <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+                        </a>
+                        <a href="/contact" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 relative group">
+                            Contact
+                            <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+                        </a>
+                    </div>
+                </div>
 
+                @if($isAuthenticated)
+                <div class="flex items-center space-x-5">
+                    <a href="/favorites" class="text-gray-600 hover:text-blue-600 relative p-2 rounded-full hover:bg-gray-100 transition-all duration-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                        <span class="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-500 rounded-full">3</span>
+                    </a>
+                    <a href="/notifications" class="text-gray-600 hover:text-blue-600 relative p-2 rounded-full hover:bg-gray-100 transition-all duration-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                        </svg>
+                        <span class="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-blue-500 rounded-full">2</span>
+                    </a>
+                    <div class="relative group">
+                        <button
+                            onclick="toggleProfileMenu()"
+                            class="flex items-center focus:outline-none transition-transform duration-300 hover:scale-105"
+                            aria-label="Profile menu"
+                        >
+                            <img
+                                src="https://th.bing.com/th?q=User+Icon+Unique+Background&w=120&h=120&c=1&rs=1&qlt=90&r=0&cb=1&pid=InlineBlock&mkt=en-XA&cc=MA&setlang=en&adlt=strict&t=1&mw=247"
+                                alt="Profile"
+                                class="h-10 w-10 rounded-full object-cover border-2 border-blue-100 shadow-md hover:shadow-lg transition-all duration-300"
+                            >
+                            <div class="ml-2 hidden md:block">
+                                <p class="text-sm font-medium text-gray-800">{{ auth()->user()->name }}</p>
+                                <p class="text-xs text-gray-500">{{ auth()->user()->role }}</p>
+                            </div>
+                            <svg class="w-4 h-4 ml-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div
+                            id="profileMenu"
+                            class="absolute z-100 right-0 mt-3 w-64 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl py-2 hidden transform origin-top-right transition-all duration-300 ease-out opacity-0 scale-95 border border-gray-100"
+                        >
+                            <div class="px-5 py-3 border-b border-gray-100">
+                                <p class="font-medium text-gray-800">Welcome back!</p>
+                                <p class="text-sm text-gray-500">{{ auth()->user()->email }}</p>
+                            </div>
+                            <a
+                                href="{{ auth()->user()->role === 'admin' ? route('admin.dashboard') : route('dashboard') }}"
+                                class="flex items-center px-5 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200 rounded-lg mx-1"
+                            >
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                                </svg>
+                                Dashboard
+                            </a>
+                            <a
+                                href="/bookings"
+                                class="flex items-center px-5 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200 rounded-lg mx-1"
+                            >
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                My Bookings
+                            </a>
+                            <a
+                                href="/profile"
+                                class="flex items-center px-5 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200 rounded-lg mx-1"
+                            >
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                                Profile
+                            </a>
+                            <a
+                                href="/settings"
+                                class="flex items-center px-5 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200 rounded-lg mx-1"
+                            >
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                Settings
+                            </a>
+                            <div class="border-t border-gray-100 my-1"></div>
+                            <a
+                                href="/logout"
+                                class="flex items-center px-5 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors duration-200 rounded-lg mx-1"
+                            >
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                </svg>
+                                Sign out
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    function toggleProfileMenu() {
+                        const menu = document.getElementById('profileMenu');
+
+                        // Add smooth transition effects
+                        if (menu.classList.contains('hidden')) {
+                            menu.classList.remove('hidden');
+                            // Force a reflow to ensure the transition works
+                            void menu.offsetWidth;
+                            menu.classList.remove('opacity-0', 'scale-95');
+                            menu.classList.add('opacity-100', 'scale-100');
+                        } else {
+                            menu.classList.add('opacity-0', 'scale-95');
+                            menu.addEventListener('transitionend', function handler() {
+                                menu.classList.add('hidden');
+                                menu.removeEventListener('transitionend', handler);
+                            }, { once: true });
+                        }
+
+                        // Close when clicking outside
+                        const closeMenu = function(event) {
+                            if (!event.target.closest('.relative.group')) {
+                                menu.classList.add('opacity-0', 'scale-95');
+                                menu.addEventListener('transitionend', function handler() {
+                                    menu.classList.add('hidden');
+                                    menu.removeEventListener('transitionend', handler);
+                                }, { once: true });
+                                document.removeEventListener('click', closeMenu);
+                            }
+                        };
+
+                        document.addEventListener('click', closeMenu);
+                    }
+                </script>
+
+                @else
+                <div class="flex items-center space-x-4">
+                    <a href="/search" class="text-gray-600 hover:text-blue-600 p-2 rounded-full hover:bg-gray-100 transition-all duration-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </a>
+                    <a href="/login" class="text-gray-700 hover:text-blue-600 px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-transparent hover:border-blue-100">Sign In</a>
+                    <a href="/register" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors shadow-md hover:shadow-lg transform hover:scale-105">Sign Up</a>
+                </div>
+                @endif
+            </div>
+        </div>
+
+        <!-- Mobile Menu Button (Hidden on desktop) -->
+        <div class="md:hidden flex items-center absolute right-4 top-5">
+            <button class="mobile-menu-button text-gray-500 hover:text-blue-600 focus:outline-none">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
     <!-- Modal Overlay -->
-    <div class="fixed inset-0  bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="fixed inset-0 mt-28 bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div class="bg-white  max-w-6xl w-full max-h-[90vh] overflow-hidden">
             <!-- Modal Header -->
             <div class="flex items-center justify-between p-6 border-b border-gray-200">
@@ -46,7 +226,8 @@
                                  class="w-full h-full object-cover">
 
                             <div class="absolute top-4 left-4 flex flex-col space-y-2">
-                                @if($vehicule)
+                              {{--
+                              @if($vehicule)
                                 <span class="bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full">
                                     FEATURED
                                 </span>
@@ -56,6 +237,7 @@
                                     {{ $vehicule->discount_percentage }}% OFF
                                 </span>
                                 @endif
+                              --}}
                                 @if($vehicule)
                                 <span class="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">
                                     AVAILABLE NOW
@@ -166,17 +348,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-3">
-                                            <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm text-gray-600">Mileage</p>
-                                            <p class="font-semibold text-gray-900">{{ number_format($vehicule->mileage) }} miles</p>
-                                        </div>
-                                    </div>
+
 
                                     <div class="flex items-center">
                                         <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
@@ -423,8 +595,8 @@
                                 @if($vehicule->original_price > $vehicule->price_per_day)
                                 <p class="text-lg text-gray-400 line-through">${{ $vehicule->original_price }}</p>
                                 @endif
-                                <p class="text-3xl font-bold text-blue-600">
-                                    ${{ $vehicule->price_per_day }}
+                                <p class="text-2xl font-bold text-blue-600">
+                                    MAD{{ number_format($vehicule->tarif_journalier, 1) }}
                                     <span class="text-base font-normal text-gray-600">/day</span>
                                 </p>
                                 @if($vehicule->discount_percentage > 0)
@@ -435,6 +607,8 @@
                             </div>
 
                             <!-- Rental Duration Calculator -->
+                            {{--
+
                             <div class="space-y-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Pick-up Date & Time</label>
@@ -447,6 +621,7 @@
                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 </div>
                             </div>
+                            --}}
 
 
                         </div>
@@ -528,17 +703,19 @@
 
                             <!-- Action Buttons -->
                             <div class="space-y-3">
-                                <a href="{{ route('vehicules.reserve', $vehicule->id) }}"
-                                        class="cursor-pointer w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition-colors shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
+                                <button wire:click="reserveVehicule"
+                                        class="cursor-pointer w-[100%] bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition-colors shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
                                         >
                                     Reserve Now
-                                        </a>
-                               {{--
+                                </button>
 
-                               <button wire:click="addToCompare"
-                                        class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-xl transition-colors">
-                                    Add to Compare
-                                </button>--}}
+{{--
+<button wire:click="addToCompare"
+         class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-xl transition-colors">
+     Add to Compare
+ </button>
+--}}
+
                             </div>
 
                             <!-- Trust Indicators -->

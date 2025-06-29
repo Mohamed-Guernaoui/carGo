@@ -23,13 +23,12 @@ class ClientDashboard extends Component
 
     protected function loadStats()
     {
-        $user = Auth::user();
+        $user = auth()->user();
 
-        $this->upcomingRentalsCount = $user
-            ->reservation()
-            ->where("start_date", ">", now())
-            ->whereIn("status", ["pending", "confirmed"])
-            ->count();
+        $this->upcomingRentalsCount = $user->reservation();
+        // ->where("start_date", ">", now());
+        // ->whereIn("status", ["pending", "confirmed"])
+        // ->count();
 
         $this->activeRentalsCount = $user
             ->rentals()
