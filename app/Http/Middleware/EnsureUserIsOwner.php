@@ -13,20 +13,27 @@ class EnsureUserIsOwner
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function handle(Request $request, Closure $next): Response
     {
         if (
             $request->path() === "dashboard" &&
-            auth()->user()->role === "client"
+            auth()->guard()->user()->role === "owner"
         ) {
             return redirect()->route("admin.dashboard");
+        } elseif (
+            $request->path() === "dashboard" &&
+            auth()->guard()->user()->role === "client"
+        ) {
+            return redirect()->route("client.dashboard");
         }
-        // match (auth()->user()->role) {
-        //     "client" => redirect()->route("admin.dashboard"),
-        //     "owner" => redirect()->route(
-        //         "admin.profile"
-        //     ), // default => $next($request),
-        // };
+
         return $next($request);
     }
 }
