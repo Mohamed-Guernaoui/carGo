@@ -27,7 +27,12 @@ class Vehicule extends Model implements HasMedia
         "categorie_vehicule_id",
         "depot_actuel_id",
         "statut",
-        "caracteristiques_json",
+        "couleur",
+        "caracteristiques",
+        "owner_id",
+        "transmission",
+        "images",
+        "type_carburant",
     ];
 
     public function reservations(): HasMany
@@ -114,5 +119,11 @@ class Vehicule extends Model implements HasMedia
             (object) ["id" => 4, "name" => "Houston, TX"],
         ];
         return $locations[$this->id % count($locations)];
+    }
+
+    public function getDisplayTypeAttribute()
+    {
+        // Adjust this based on your 'type' column (if added) or logic
+        return ucfirst($this->type ?? $this->modele); // Example fallback
     }
 }

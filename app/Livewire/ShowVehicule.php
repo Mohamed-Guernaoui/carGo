@@ -14,12 +14,14 @@ class ShowVehicule extends Component
     // The mount method will automatically receive the Vehicule model
     // if you use route model binding in your route definition.
     public $activeTab = "overview";
+    public $isAuthenticated = false;
     /**
      * @return void
      */
     #[Layout("components.layouts.guest")]
     public function mount(Vehicule $vehicule)
     {
+        $this->isAuthenticated = auth()->check();
         $this->vehicule = $vehicule;
         $this->activeTab = "overview";
     }
@@ -52,16 +54,6 @@ class ShowVehicule extends Component
      */
     public function reserveVehicule()
     {
-        // Logic to initiate booking for this vehicle
-        // session()->flash(
-        //     "message",
-        //     'Initiating booking for "' .
-        //         $this->vehicule->marque .
-        //         " " .
-        //         $this->vehicule->modele .
-        //         '".'
-        // );
-        // Example: redirect to a booking form
         return redirect()->route("vehicules.reserve", $this->vehicule->id);
     }
 }
